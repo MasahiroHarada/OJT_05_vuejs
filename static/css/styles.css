@@ -1,0 +1,29 @@
+body {
+    font-family: "Jaldi", sans-serif;
+    font-size: 14px;
+    color: #42b983;
+    padding-bottom: 12rem;
+}
+
+.btn:focus, .btn:active:focus {
+    outline: 0;
+}
+
+.icon-button i {
+    display: inline-block;
+    margin-right: .5em;
+}
+.icon-button .badge {
+    display: inline-block;
+    margin-left: .5em;
+    font-weight: normal;
+}
+
+.chapter-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.progress-bar {
+    background: #42b983;
+}

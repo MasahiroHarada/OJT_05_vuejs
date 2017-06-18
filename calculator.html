@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <title>Vue Sample</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jaldi" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="static/css/styles.css" />
+
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<main>
+    <div id="app" class="container">
+        <h1>Calculator</h1>
+        <form class="form-inline">
+            <input type="number" class="form-control" v-model.number="valA" />
+            <select class="form-control" v-model="operator">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">*</option>
+                <option value="/">/</option>
+            </select>
+            <input type="number" class="form-control" v-model.number="valB" />
+            <!--<button type="button" class="btn btn-default" @click="calculate()">calculate</button>-->
+        </form>
+        <h2>{{ valA }} {{ operator }} {{ valB }} = {{ result }}</h2>
+
+        <pre>{{ $data }}</pre>
+    </div>
+</main>
+
+<script>
+  var vue = new Vue({
+    el: '#app',
+    data: {
+      valA: 0,
+      valB: 0,
+      operator: "+"
+    },
+    computed: {
+      result: function() {
+        switch (this.operator) {
+          case '+':
+            return this.valA + this.valB;
+          case '-':
+            return this.valA - this.valB;
+          case '*':
+            return this.valA * this.valB;
+          case '/':
+            return this.valA / this.valB;
+        }
+      }
+    }
+//    methods: {
+//      calculate: function() {
+//        switch (this.operator) {
+//          case '+':
+//            this.result = this.valA + this.valB;
+//            break;
+//          case '-':
+//            this.result = this.valA - this.valB;
+//            break;
+//          case '*':
+//            this.result = this.valA * this.valB;
+//            break;
+//          case '/':
+//            this.result = this.valA / this.valB;
+//            break;
+//        }
+//      }
+//    }
+  });
+</script>
+</body>
+</html>

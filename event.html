@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <title>Vue Sample</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jaldi" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="static/css/styles.css" />
+
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<main>
+    <div id="app" class="container">
+        <h1>The Beatles</h1>
+        <ul>
+            <li v-for="member in beatles">
+                <button class="btn btn-default" @click="sing(member)">{{ member.name }}</button>
+            </li>
+        </ul>
+
+        <pre>{{ $data }}</pre>
+    </div>
+</main>
+<script>
+  var vue = new Vue({
+    el: '#app',
+    data: {
+      beatles: [
+        { name: 'John', song: 'Help' },
+        { name: 'Paul', song: 'Yesterday' },
+        { name: 'George', song: 'Something' },
+        { name: 'Ringo', song: 'Yellow Submarine' }
+      ]
+    },
+    methods: {
+      sing: function(member) {
+        console.log(`${member.name} sings ${member.song}`);
+      }
+    }
+  });
+</script>
+</body>
+</html>

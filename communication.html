@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <title>Vue Sample</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jaldi" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="static/css/styles.css" />
+
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<main>
+    <div id="app" class="container">
+        <h1>Parent - Child Communication</h1>
+
+        <h2 class="text-right">{{ progress }} % complete.</h2>
+
+        <div class="row">
+            <div class="col-sm-3">
+                <img src="static/image/book-java.jpg" class="img-responsive" />
+            </div>
+            <div class="col-sm-9">
+                <progress-bar :progress="progress"></progress-bar>
+                <div class="alert alert-success" v-if="progress === 100">
+                    <i class="fa fa-check-circle"></i> Congratulations!! You completed all chapters.
+                </div>
+                <ul class="list-group chapter-list">
+                    <li class="list-group-item" v-for="chapter in chapters">
+                        <chapter :item="chapter" @complete="updateCompleted"></chapter>
+                    </li>
+                </ul>
+
+                <div class="text-right">
+                    <button class="btn btn-danger" @click="clearHistory">Clear History</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<template id="chapter-template">
+    <div class="chapter-item">
+        <span>第{{ item.id }}章　{{ item.title }}</span>
+        <button class="btn btn-default" :disabled="item.completed" @click="complete">Complete</button>
+    </div>
+</template>
+
+<template id="progress-bar-template">
+    <div class="progress">
+        <div class="progress-bar" :style="{'width': progress + '%'}"></div>
+    </div>
+</template>
+
+<script>
+  var initialChapters = [
+    { id: 1, title: 'プログラムの書き方', completed: false },
+    { id: 2, title: '式と演算子', completed: false },
+    { id: 3, title: '条件分岐と繰り返し', completed: false },
+    { id: 4, title: '配列', completed: false },
+    { id: 5, title: 'メソッド', completed: false },
+    { id: 6, title: '複数クラスを用いた開発', completed: false },
+    { id: 7, title: 'オブジェクト指向をはじめよう', completed: false },
+    { id: 8, title: 'インスタンスとクラス', completed: false },
+    { id: 9, title: 'さまざまなクラス機構', completed: false },
+    { id: 10, title: 'カプセル化', completed: false },
+    { id: 11, title: '継承', completed: false },
+    { id: 12, title: '高度な継承', completed: false },
+    { id: 13, title: '多態性', completed: false },
+    { id: 14, title: 'Javaを支える標準クラス', completed: false },
+    { id: 15, title: '例外', completed: false }
+  ];
+
+  Vue.component('chapter', {
+    props: ['item'],
+    template: '#chapter-template',
+    methods: {
+      complete: function() {
+        this.item.completed = true;
+        this.$emit('complete');
+      }
+    }
+  });
+
+  Vue.component('progress-bar', {
+    props: ['progress'],
+    template: '#progress-bar-template'
+  });
+
+  var vue = new Vue({
+    el: '#app',
+
+    data: {
+      chapters: initialChapters,
+      progress: 0
+    },
+
+    methods: {
+      updateCompleted: function() {
+        var chaptersCount = this.chapters.length;
+        var completedChapters = this.chapters.filter(function(chapter) {
+          return chapter.completed;
+        });
+        var completedCount = completedChapters.length;
+        this.progress = Math.round(completedCount / chaptersCount * 100);
+
+        localStorage.setItem('OJT_SAMPLE', JSON.stringify(this.chapters));
+      },
+      clearHistory: function() {
+        this.chapters = this.chapters.map(function(chapter) {
+          chapter.completed = false;
+          return chapter;
+        });
+
+        this.updateCompleted();
+
+        localStorage.removeItem('OJT_SAMPLE');
+      }
+    },
+
+    created: function() {
+      var storedItem = localStorage.getItem('OJT_SAMPLE');
+      if (storedItem === null) {
+        return;
+      }
+      this.chapters = JSON.parse(storedItem);
+      this.updateCompleted();
+    }
+  });
+</script>
+</body>
+</html>

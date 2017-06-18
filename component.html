@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <title>Vue Sample</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jaldi" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="static/css/styles.css" />
+
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<main>
+    <div id="app" class="container">
+        <h1>Icon Button Components</h1>
+
+        <icon-button iconclass="cloud-upload">Upload</icon-button>
+
+        <icon-button iconclass="download">Download</icon-button>
+
+        <icon-button iconclass="thumbs-o-up">Like</icon-button>
+
+        <icon-button iconclass="google-plus">Signin with Google</icon-button>
+
+        <icon-button iconclass="twitter">Signin with Twitter</icon-button>
+
+        <hr />
+
+        <h1>Like Button</h1>
+
+        <like-button></like-button>
+        <like-button></like-button>
+        <like-button></like-button>
+
+    </div>
+</main>
+
+<template id="icon-button-template">
+    <button class="btn btn-default icon-button">
+        <i class="fa" :class="'fa-' + iconclass"></i>
+        <slot></slot>
+    </button>
+</template>
+
+<template id="like-button-template">
+    <button class="btn btn-default icon-button" @click="countUp()">
+        <i class="fa fa-thumbs-o-up"></i>
+        Like
+        <span class="badge">{{ count }}</span>
+    </button>
+</template>
+
+<script>
+  Vue.component('icon-button', {
+    props: ['iconclass', 'text'],
+    template: '#icon-button-template'
+  });
+
+  Vue.component('like-button', {
+    template: '#like-button-template',
+    data: function() {
+      return {
+        count: 0
+      }
+    },
+    methods: {
+      countUp: function() {
+        this.count += 1;
+      }
+    }
+  });
+
+  var vue = new Vue({
+    el: '#app'
+  });
+</script>
+</body>
+</html>
