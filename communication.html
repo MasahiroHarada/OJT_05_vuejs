@@ -25,9 +25,7 @@
             <div class="col-sm-9">
                 <progress-bar :progress="progress"></progress-bar>
 
-                <div class="alert alert-success" v-if="progress === 100">
-                    <i class="fa fa-check-circle"></i> Congratulations!! You completed all chapters.
-                </div>
+                <progress-alert :progress="progress"></progress-alert>
 
                 <chapters :content="chapters" @complete="updateCompleted"></chapters>
 
@@ -56,6 +54,12 @@
 <template id="progress-bar-template">
     <div class="progress">
         <div class="progress-bar" :style="{'width': progress + '%'}"></div>
+    </div>
+</template>
+
+<template id="progress-alert-template">
+    <div class="alert alert-success" v-if="progress === 100">
+        <i class="fa fa-check-circle"></i> Congratulations!! You completed all chapters.
     </div>
 </template>
 
@@ -91,6 +95,11 @@
   Vue.component('progress-bar', {
     props: ['progress'],
     template: '#progress-bar-template'
+  });
+
+  Vue.component('progress-alert', {
+    props: ['progress'],
+    template: '#progress-alert-template'
   });
 
   var vue = new Vue({
