@@ -24,14 +24,12 @@
             </div>
             <div class="col-sm-9">
                 <progress-bar :progress="progress"></progress-bar>
+
                 <div class="alert alert-success" v-if="progress === 100">
                     <i class="fa fa-check-circle"></i> Congratulations!! You completed all chapters.
                 </div>
-                <ul class="list-group chapter-list">
-                    <li class="list-group-item" v-for="chapter in chapters">
-                        <chapter :item="chapter" @complete="updateCompleted"></chapter>
-                    </li>
-                </ul>
+
+                <chapters :content="chapters" @complete="updateCompleted"></chapters>
 
                 <div class="text-right">
                     <button class="btn btn-danger" @click="clearHistory">Clear History</button>
@@ -42,11 +40,17 @@
     </div>
 </main>
 
-<template id="chapter-template">
-    <div class="chapter-item">
-        <span>第{{ item.id }}章　{{ item.title }}</span>
-        <button class="btn btn-default" :disabled="item.completed" @click="complete">Complete</button>
-    </div>
+<template id="chapters-template">
+    <ul class="list-group chapter-list">
+        <li class="list-group-item" v-for="chapter in content">
+            <div class="chapter-item">
+                <span>第{{ chapter.id }}章　{{ chapter.title }}</span>
+                <button class="btn btn-default"
+                        :disabled="chapter.completed"
+                        @click="complete(chapter)">Complete</button>
+            </div>
+        </li>
+    </ul>
 </template>
 
 <template id="progress-bar-template">
@@ -74,13 +78,12 @@
     { id: 15, title: '例外', completed: false }
   ];
 
-  Vue.component('chapter', {
-    props: ['item'],
-    template: '#chapter-template',
+  Vue.component('chapters', {
+    props: ['content'],
+    template: '#chapters-template',
     methods: {
-      complete: function() {
-        this.item.completed = true;
-        this.$emit('complete');
+      complete: function(chapter) {
+        this.$emit('complete', chapter.id);
       }
     }
   });
@@ -99,14 +102,27 @@
     },
 
     methods: {
-      updateCompleted: function() {
+      updateCompleted: function(id) {
+        this.chapters = this.chapters.map(function(chapter) {
+          if (chapter.id === id) {
+            chapter.completed = true;
+          }
+          return chapter;
+        });
+
+        this.updateProgress();
+
+        this.storeChapters();
+      },
+      updateProgress: function() {
         var chaptersCount = this.chapters.length;
         var completedChapters = this.chapters.filter(function(chapter) {
           return chapter.completed;
         });
         var completedCount = completedChapters.length;
         this.progress = Math.round(completedCount / chaptersCount * 100);
-
+      },
+      storeChapters: function() {
         localStorage.setItem('OJT_SAMPLE', JSON.stringify(this.chapters));
       },
       clearHistory: function() {
@@ -115,7 +131,7 @@
           return chapter;
         });
 
-        this.updateCompleted();
+        this.updateProgress();
 
         localStorage.removeItem('OJT_SAMPLE');
       }
@@ -127,7 +143,10 @@
         return;
       }
       this.chapters = JSON.parse(storedItem);
-      this.updateCompleted();
+
+      this.updateProgress();
+
+      this.storeChapters();
     }
   });
 </script>
